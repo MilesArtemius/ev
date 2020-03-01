@@ -1,21 +1,11 @@
 package com.company;
 
-public class Square {
-    private int x, y, size;
-    private boolean isFinal;
+public class Square extends Coords {
+    private int size;
 
     public Square(int x, int y, int size) {
-        this.x = x;
-        this.y = y;
+        super(x, y);
         this.size = size;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
     }
 
     public int getSize() {
@@ -25,8 +15,8 @@ public class Square {
     @Override
     public String toString() {
         return "TablePiece{" +
-                "x=" + x +
-                ", y=" + y +
+                "x=" + getX() +
+                ", y=" + getY() +
                 ", size=" + size +
                 '}';
     }

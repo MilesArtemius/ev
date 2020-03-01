@@ -8,7 +8,7 @@ public class PseudoTree {
 
     int size, multiplier = 1;
     LinkedList<Square> head;
-    PseudoTreeLeaf root;
+    TableCoverage root;
     boolean hasTail;
     int tailOffset;
 
@@ -21,10 +21,10 @@ public class PseudoTree {
             }
         }
 
-        size = sz;
         head = new LinkedList<>();
 
-        int halfSize = size / 2;
+        int halfSize = sz / 2;
+        size = halfSize + 1;
 
         head.add(new Square(0, 0, halfSize + 1));
         head.add(new Square(halfSize + 1, 0, halfSize));
@@ -35,7 +35,7 @@ public class PseudoTree {
             hasTail = false;
         } else {
             tailOffset = halfSize;
-            root = new PseudoTreeLeaf(new TableCoverage(halfSize + 1), null);
+            root = new TableCoverage(halfSize + 1);
             hasTail = true;
         }
     }
@@ -46,39 +46,22 @@ public class PseudoTree {
 
 
 
-    public PseudoTreeLeaf iterateRowsUntilSuccess() {
-        LinkedList<PseudoTreeLeaf> currentRow = new LinkedList<>(Collections.singletonList(root));
-        LinkedList<PseudoTreeLeaf> newRow = new LinkedList<>();
-        PseudoTreeLeaf finalContainer = null;
+    public TableCoverage iterateRowsUntilSuccess() {
+        LinkedList<TableCoverage> currentRow = new LinkedList<>(Collections.singletonList(root));
+        LinkedList<TableCoverage> newRow = new LinkedList<>();
+        TableCoverage finalContainer = null;
 
         int counter = 0;
         while (finalContainer == null) {
             for (int i = 0; i < currentRow.size(); i++) {
-                PseudoTreeLeaf leaf = currentRow.get(i);
-                if (i == 0) {
-                    //System.out.println(leaf.content);
-                    System.out.println("onesnum " + leaf.content.onesNumber);
-                }
-                if (leaf.content.onesNumber != -1) {
-                    if (leaf.content.onesNumber == 0) {
-                        finalContainer = leaf;
-                        break;
-                    }
-                    leaf.content.onesNumber--;
-                    newRow.add(leaf);
-                    continue;
-                }
-                LinkedList<Square> children = leaf.content.variateSquares();
+                TableCoverage leaf = currentRow.get(i);
+                LinkedList<Square> children = leaf.variateSquares();
                 if (children.isEmpty()) {
-                    if (leaf.content.onesNumber != 0) {
-                        newRow.add(leaf);
-                        continue;
-                    }
                     finalContainer = leaf;
                     break;
                 }
                 for (Square square: children) {
-                    PseudoTreeLeaf newLeaf = new PseudoTreeLeaf(new TableCoverage(leaf.content, square), leaf);
+                    TableCoverage newLeaf = new TableCoverage(leaf, square);
                     leaf.children.add(newLeaf);
                     newRow.add(newLeaf);
                 }
